@@ -12,6 +12,8 @@
               type="text" 
               placeholder="Nome do aluno" 
               class="bg-dark-400 rounded-lg mt-2 border-none py-3 px-5 text-white-600 text-base"
+              @keyup="onSearchUser"
+              v-model="search"
             />
           </div>
           <div class="flex flex-col w-[48%]">
@@ -22,8 +24,16 @@
               name="nacionalidade" 
               id="nacionalidade" 
               class="bg-dark-400 rounded-lg mt-2 border-none py-3 px-5 text-white-600 text-base hover:cursor-pointer"
+              @change="onSearchUser"
+              v-model="searchCountry"
             >
               <option value="">Todas</option>
+              <option 
+                v-for="nat in $store.state.dataUser"
+                :key="nat.location.country.postcode"
+              >
+                {{nat.location.country}}
+              </option>
             </select>
           </div>
         </div>
@@ -48,8 +58,8 @@
               <tbody>
                   <tr 
                     class="border-t border-gray-200 dark:border-gray-700"
-                    v-for="user in $store.state.dataUser"
-                    :key="user.id.name"
+                    v-for="user in onSearch()"
+                    :key="user.id.value"
                   >
                       <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
                           {{`${user.name.first} ${user.name.last}`}}
@@ -85,7 +95,9 @@ export default {
   data() {
     return {
       loading: false,
-      showModal: false
+      showModal: false,
+      search: '',
+      searchCountry: ''
     }
   },
   created() {
@@ -93,6 +105,17 @@ export default {
     this.$store.dispatch('getUsers').finally(() =>{
       this.loading = false;
     })
+  },
+  methods: {
+    onSearch(){
+      if(this.search.length > 0){
+        return this.$store.state.dataUser.filter(a => (a.name.first.toUpperCase() || a.name.last.toUpperCase()).includes(this.search.toUpperCase()))
+      } else if(this.searchCountry.length > 0) {
+        return this.$store.state.dataUser.filter(a => a.location.country.toUpperCase().includes(this.searchCountry.toUpperCase()))
+      } else {
+        return this.$store.state.dataUser;
+      }
+    }
   }
 }
 </script>
