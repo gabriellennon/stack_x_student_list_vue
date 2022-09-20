@@ -12,7 +12,7 @@
               type="text" 
               placeholder="Nome do aluno" 
               class="bg-dark-400 rounded-lg mt-2 border-none py-3 px-5 text-white-600 text-base"
-              @keyup="onSearchUser"
+              @keyup="onSearch"
               v-model="search"
             />
           </div>
@@ -24,7 +24,7 @@
               name="nacionalidade" 
               id="nacionalidade" 
               class="bg-dark-400 rounded-lg mt-2 border-none py-3 px-5 text-white-600 text-base hover:cursor-pointer"
-              @change="onSearchUser"
+              @change="onSearch"
               v-model="searchCountry"
             >
               <option value="">Todas</option>
